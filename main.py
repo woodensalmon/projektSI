@@ -8,12 +8,16 @@ import math
 
 nazwa_pliku = "plik_z_danymi.csv"
 nazwa_pliku2 = "plik_z_danymi_liczbowo.csv"
+nazwa_pliku3 = "plik_z_danymi_liczbowo_wieksze.csv"
 
 
 def load_panda():
-    df_in = pd.read_csv(nazwa_pliku2, sep=',', header=0, usecols=[0, 1, 2, 3])
-    df_out = pd.read_csv(nazwa_pliku2, sep=',', header=0, usecols=[4])
-    return df_in.values, df_out.values
+    df_in = pd.read_csv(nazwa_pliku3, sep=',', header=0, usecols=[0, 1, 2, 3])
+    df_out = pd.read_csv(nazwa_pliku3, sep=',', header=0, usecols=[4])
+    out = numpy.concatenate(df_out.values)
+    print(df_in)
+    print(type(df_in.values))
+    return df_in.values, out
 
 
 inp, out = load_panda()
@@ -100,13 +104,13 @@ data_outputs = out
 # The length of the input vector for each sample (i.e. number of neurons in the input layer).
 num_inputs = data_inputs.shape[1]
 # The number of neurons in the output layer (i.e. number of classes).
-num_classes = 1
+num_classes = 4
 
 # Creating an initial population of neural networks. The return of the initial_population() function holds references to the networks, not their weights. Using such references, the weights of all networks can be fetched.
-num_solutions = 10  # A solution or a network can be used interchangeably.
+num_solutions = 20  # A solution or a network can be used interchangeably.
 GANN_instance = pygad.gann.GANN(num_solutions=num_solutions,
                                 num_neurons_input=num_inputs,
-                                num_neurons_hidden_layers=[3,5,3],
+                                num_neurons_hidden_layers=[300, 150, 200],
                                 num_neurons_output=num_classes,
                                 hidden_activations=["relu","relu","relu"],
                                 output_activation="softmax")
@@ -123,7 +127,7 @@ initial_population = population_vectors.copy()
 
 num_parents_mating = 4  # Number of solutions to be selected as parents in the mating pool.
 
-num_generations = 100  # Number of generations.
+num_generations = 200 # Number of generations.
 
 mutation_percent_genes = 5  # Percentage of genes to mutate. This parameter has no action if the parameter mutation_num_genes exists.
 
@@ -133,24 +137,19 @@ crossover_type = "single_point"  # Type of the crossover operator.
 
 mutation_type = "random"  # Type of the mutation operator.
 
-keep_parents = 1  # Number of parents to keep in the next population. -1 means keep all parents and 0 means keep nothing.
+keep_parents = -1  # Number of parents to keep in the next population. -1 means keep all parents and 0 means keep nothing.
 
-init_range_low = -2
-init_range_high = 5
 
 ga_instance = pygad.GA(num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
                        initial_population=initial_population,
                        fitness_func=fitness_func,
                        mutation_percent_genes=mutation_percent_genes,
-                       init_range_low=init_range_low,
-                       init_range_high=init_range_high,
                        parent_selection_type=parent_selection_type,
                        crossover_type=crossover_type,
                        mutation_type=mutation_type,
                        keep_parents=keep_parents,
                        callback_generation=callback_generation)
-
 ga_instance.run()
 
 # After the generations complete, some plots are showed that summarize how the outputs/fitness values evolve over generations.
