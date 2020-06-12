@@ -75,10 +75,10 @@ def callback_generation(ga_instance):
 
     GANN_instance.update_population_trained_weights(population_trained_weights=population_matrices)
 
-    print("Generacja = {generation}".format(generation=ga_instance.generations_completed))
+    print("Generacja  = {generation}".format(generation=ga_instance.generations_completed))
     print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
     print("Zmiana     = {change}".format(change=ga_instance.best_solution()[1] - last_fitness))
-
+    #print(ga_instance.best_solution())
     last_fitness = ga_instance.best_solution()[1].copy()
 
 
@@ -103,7 +103,7 @@ num_classes = 4
 num_solutions = 20
 GANN_instance = pygad.gann.GANN(num_solutions=num_solutions,
                                 num_neurons_input=num_inputs,
-                                num_neurons_hidden_layers=[150, 100, 45],
+                                num_neurons_hidden_layers=[40,20,10],
                                 num_neurons_output=num_classes,
                                 hidden_activations=["relu","relu","relu"],
                                 output_activation="softmax")
@@ -120,7 +120,7 @@ type_of_mutation = "random"
 parent_type_selection = "sss"
 
 num_parents_mating = 4
-num_generations = 40
+num_generations = 10
 mutation_percent_genes = 5
 
 
@@ -138,12 +138,11 @@ ga_instance = pygad.GA(num_generations=num_generations,
                        keep_parents=keep_parents,
                        callback_generation=callback_generation)
 ga_instance.run()
-
 ga_instance.plot_result()
 
 
 solution, solution_fitness, solution_idx = ga_instance.best_solution()
-print("Parametry najlepszego rozwiązania : {solution}".format(solution=solution))
+print("Wagi najlepszego rozwiązania : {solution}".format(solution=solution))
 print("Wartość fitness najlepszego rozwiązania = {solution_fitness}".format(solution_fitness=solution_fitness))
 
 if ga_instance.best_solution_generation != -1:
@@ -153,13 +152,16 @@ if ga_instance.best_solution_generation != -1:
 
 predictions = pygad.nn.predict(last_layer=GANN_instance.population_networks[solution_idx],
                                data_inputs=data_inputs)
-print("Prognozy wyszkolonej sieci : {predictions}".format(predictions=predictions))
+print("\n1 - Iris-setosa, 2 - Iris-versicolor, 3 - Iris-virginica")
+print("Prognozy wyszkolonej sieci : \n{predictions}\n".format(predictions=predictions))
+
+
 
         # STATYSTYKI
 num_wrong = numpy.where(predictions != data_outputs)[0]
 num_correct = data_outputs.size - num_wrong.size
 accuracy = 100 * (num_correct / data_outputs.size)
-tmp = round(accuracy,2)
+tmp = round(accuracy, 2)
 print("Dokładnosc klasyfikacji : {accuracy}%.".format(accuracy=tmp))
 print("Liczba poprawnie rozpoznanych obiektow  : {num_correct}.".format(num_correct=num_correct))
 print("Liczba blednie rozpoznanych obiektow : {num_wrong}.".format(num_wrong=num_wrong.size))
