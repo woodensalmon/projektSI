@@ -8,7 +8,7 @@ nazwa_pliku = "plik_z_danymi.csv"
 nazwa_pliku2 = "plik_z_danymi_liczbowo.csv"
 nazwa_pliku3 = "plik_z_danymi_liczbowo_wieksze.csv"
 
-
+#funkcja czytająca plik z danymi i zamieniająca je na odpowiedni format
 def load_panda():
     df_in = pd.read_csv(nazwa_pliku3, sep=',', header=0, usecols=[0, 1, 2, 3])
     df_out = pd.read_csv(nazwa_pliku3, sep=',', header=0, usecols=[4])
@@ -66,28 +66,32 @@ def sigm():
     return
 """
 
-
+#funkcja uruchamiana po każdej generacji populacji
 def callback_generation(ga_instance):
     global GANN_instance, last_fitness
-
+    #matryca populacji
     population_matrices = pygad.gann.population_as_matrices(population_networks=GANN_instance.population_networks,
                                                             population_vectors=ga_instance.population)
 
+    #aktualizacja wag populacji
     GANN_instance.update_population_trained_weights(population_trained_weights=population_matrices)
-
+    #wypisanie działania algorytmu
     print("Generacja = {generation}".format(generation=ga_instance.generations_completed))
     print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
     print("Zmiana     = {change}".format(change=ga_instance.best_solution()[1] - last_fitness))
 
+    #najlepsza wartość funckji fitness
     last_fitness = ga_instance.best_solution()[1].copy()
 
 
 def fitness_func(solution, sol_idx):
     global GANN_instance, data_inputs, data_outputs
-
+    #obliczanie prawdopodobnego wyniku
     predictions = pygad.nn.predict(last_layer=GANN_instance.population_networks[sol_idx],
                                    data_inputs=data_inputs)
+    #zliczanie prawidłowych wyników
     correct_predictions = numpy.where(predictions == data_outputs)[0].size
+    #wartość fitness badanego osobnika
     solution_fitness = (correct_predictions / data_outputs.size) * 100
 
     return solution_fitness
@@ -101,6 +105,7 @@ num_inputs = data_inputs.shape[1]
 
 num_classes = 4
 num_solutions = 20
+#inicjalizacja sieci neuronowiej
 GANN_instance = pygad.gann.GANN(num_solutions=num_solutions,
                                 num_neurons_input=num_inputs,
                                 num_neurons_hidden_layers=[150, 100, 45],
@@ -111,7 +116,7 @@ GANN_instance = pygad.gann.GANN(num_solutions=num_solutions,
 
 #pygad.gann.validate_network_parameters()
 
-
+#przypisanie populacji do wektora i zapisanie ich jako pupulacji początkowej
 population_vectors = pygad.gann.population_as_vectors(population_networks=GANN_instance.population_networks)
 population_initialize = population_vectors.copy()
 
@@ -126,7 +131,7 @@ mutation_percent_genes = 5
 
 keep_parents = -1
 
-
+#inicjalizacja algorytmu genetycznego
 ga_instance = pygad.GA(num_generations=num_generations,
                        num_parents_mating=num_parents_mating,
                        initial_population=population_initialize,
