@@ -75,10 +75,12 @@ def callback_generation(ga_instance):
 
     #aktualizacja wag populacji
     GANN_instance.update_population_trained_weights(population_trained_weights=population_matrices)
+
     #wypisanie działania algorytmu
     print("Generacja = {generation}".format(generation=ga_instance.generations_completed))
     print("Fitness    = {fitness}".format(fitness=ga_instance.best_solution()[1]))
     print("Zmiana     = {change}".format(change=ga_instance.best_solution()[1] - last_fitness))
+    print(ga_instance.best_solution())
 
     #najlepsza wartość funckji fitness
     last_fitness = ga_instance.best_solution()[1].copy()
@@ -96,14 +98,19 @@ def fitness_func(solution, sol_idx):
 
     return solution_fitness
 
-
+#dane wejściowe
 data_inputs = inp
+#dane wyjściowe
 data_outputs = out
+
+# pierwsza wartość fitness
 last_fitness = 0
+# liczba danych wejściowych
 num_inputs = data_inputs.shape[1]
 
-
+# liczba klas danych wyjściowych
 num_classes = 4
+#liczba rozwiązań
 num_solutions = 20
 #inicjalizacja sieci neuronowiej
 GANN_instance = pygad.gann.GANN(num_solutions=num_solutions,
@@ -120,15 +127,20 @@ GANN_instance = pygad.gann.GANN(num_solutions=num_solutions,
 population_vectors = pygad.gann.population_as_vectors(population_networks=GANN_instance.population_networks)
 population_initialize = population_vectors.copy()
 
+#rodzaj krzyżowania
 type_of_crossover = "single_point"
+#rodzaj metody mutowania
 type_of_mutation = "random"
+# sposób selekcji rodziców
 parent_type_selection = "sss"
-
+# liczba rodziców do przekazania genó
 num_parents_mating = 4
+#liczba generacji
 num_generations = 40
+#procent tworzenia się mutacji
 mutation_percent_genes = 5
 
-
+# czy zachowywać rodziców -1 = zachowujemy wszystkich rodziców
 keep_parents = -1
 
 #inicjalizacja algorytmu genetycznego
@@ -168,3 +180,4 @@ tmp = round(accuracy,2)
 print("Dokładnosc klasyfikacji : {accuracy}%.".format(accuracy=tmp))
 print("Liczba poprawnie rozpoznanych obiektow  : {num_correct}.".format(num_correct=num_correct))
 print("Liczba blednie rozpoznanych obiektow : {num_wrong}.".format(num_wrong=num_wrong.size))
+print("1-costam\n2-costam\n2-costam")
