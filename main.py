@@ -140,7 +140,7 @@ num_generations = 40
 #procent tworzenia się mutacji
 mutation_percent_genes = 5
 
-# czy zachowywać rodziców -1 = zachowujemy wszystkich rodziców
+# czy zachowywać rodziców w następnej generacji -1 = zachowujemy wszystkich rodziców
 keep_parents = -1
 
 #inicjalizacja algorytmu genetycznego
