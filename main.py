@@ -168,8 +168,7 @@ if ga_instance.best_solution_generation != -1:
         best_solution_generation=ga_instance.best_solution_generation))
 
 
-predictions = pygad.nn.predict(last_layer=GANN_instance.population_networks[solution_idx],
-                               data_inputs=data_inputs)
+predictions = pygad.nn.predict(last_layer=GANN_instance.population_networks[solution_idx],data_inputs=data_inputs)
 print("Prognozy wyszkolonej sieci : {predictions}".format(predictions=predictions))
 
         # STATYSTYKI
